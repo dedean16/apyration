@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 def propagate2flat(r_0, theta_0, d, D):
     """Description pending ;)."""
     import numpy as np
