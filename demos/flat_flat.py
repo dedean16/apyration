@@ -1,6 +1,6 @@
-from functions import *
-from config_plot import *
-from config_general import *
+from main.functions import *
+from main.config_plot import *
+from main.config_general import *
 import matplotlib.pyplot as plt
 import numpy
 

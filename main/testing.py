@@ -1,6 +1,6 @@
-from functions import *
-from config_plot import *
-from config_general import *
+from main.functions import *
+from main.config_plot import *
+from main.config_general import *
 import matplotlib.pyplot as plt
 import numpy
 
@@ -21,7 +21,7 @@ h2 = -f * (MATERIAL_REFRACTIVE_INDEX-1) * THICKNESS_LENS / (FIRST_LENS_RADIUS*MA
 
 
 print(f, h2)
-for ray in numpy.linspace(-2.5, -1, RAYS):
+for ray in numpy.linspace(-3, -1, RAYS):
     result1 = propagate2spherical(ray, INITIAL_ANGLE, FIRST_INTERFACE, COMPONENT_DIAMETER, FIRST_LENS_RADIUS)
     theta2 = snells(ray_angle=result1["ray_angle"], normal_angle=result1["normal_angle"],
                     index_left=VACUUM_REFRACTIVE_INDEX, index_right=MATERIAL_REFRACTIVE_INDEX)
