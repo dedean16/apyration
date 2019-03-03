@@ -19,7 +19,7 @@ def propagate2flat(initial_y, initial_angle, distance_to_interface, component_di
     """
     end_y = initial_y + tan(initial_angle) * distance_to_interface
     if not suppress:
-        if 2*end_y > component_diameter:
+        if abs(2*end_y) > component_diameter:
             warnings.warn("The ray is out of bounds for your optical component.")
     return {
         "x": distance_to_interface,
@@ -44,7 +44,7 @@ def propagate2spherical(initial_y, initial_angle, distance_to_interface, compone
     normal_angle = -asin(end_y/interface_radius)
     ray_angle = -normal_angle + initial_angle
 
-    if 2*end_y > component_diameter:
+    if abs(2*end_y) > component_diameter:
         warnings.warn("The ray is out of bounds for your optical component.")
     return {
         "x": end_x,
