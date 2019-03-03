@@ -1,6 +1,7 @@
-from main.functions import *
-from main.config_plot import *
-from main.config_general import *
+#!/usr/bin/env python3
+from functions import *
+from config_plot import *
+from config_general import *
 import matplotlib.pyplot as plt
 import numpy
 

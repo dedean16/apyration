@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from math import tan, sin, asin, sqrt
 import warnings
 from numpy.polynomial import Polynomial
