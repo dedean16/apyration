@@ -25,13 +25,18 @@ def lens_surface(z, Rsphere, Rring, vertex_count=32):
         t = np.linspace(0, 2*np.pi, vertex_count)
         x = np.outer(r, np.cos(t))
         y = np.outer(r, np.sin(t))
-        z = z * np.ones(np.size(x))
+        z = z * np.ones(np.shape(x))
     else:                           # Create spherical surface
         ringangle = np.arcsin(Rring / Rsphere)
         u = np.linspace(0, 2 * np.pi, vertex_count)
         v = np.linspace(0, ringangle, vertex_count)
         x = Rsphere * np.outer(np.cos(u), np.sin(v))
         y = Rsphere * np.outer(np.sin(u), np.sin(v))
-        z = Rsphere * np.outer(np.ones(np.size(u)), np.cos(v)) + z + Rsphere
+        z = z + Rsphere * (1 - np.outer(np.ones(np.size(u)), np.cos(v)))
 
     return {"x": x, "y": y, "z": z}
+
+
+def lens_thickness(Rsphere, Rring):
+    """Compute thickness of half spherical lens."""
+    return Rsphere - np.sqrt(Rsphere**2 - Rring**2)
