@@ -75,6 +75,6 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
             print('Warning: no intersection found in forward ray direction!')
 
         B = A + k * kdist                               # Solution for intersec
-        N = unit(B - Csphere)                           # Compute normal vector
+        N = unit(B - Csphere) * np.sign(Rsphere)        # Compute normal vector
 
     return B, N
