@@ -10,14 +10,14 @@ second_lens = lens_curvature(COMPONENT_DIAMETER, SECOND_INTERFACE, SECOND_LENS_R
 
 
 for ray in numpy.linspace(-5, 2, RAYS):
-    result1 = propagate2flat(ray, INITIAL_ANGLE, FIRST_INTERFACE, COMPONENT_DIAMETER)
-    theta2 = snells(ray_angle=result1["ray_angle"], normal_angle=result1["normal_angle"],
-                    index_left=VACUUM_REFRACTIVE_INDEX, index_right=MATERIAL_REFRACTIVE_INDEX)
-    result2 = propagate2spherical(result1["y"], theta2, SECOND_INTERFACE-result1["x"], COMPONENT_DIAMETER,
-                                  SECOND_LENS_RADIUS)
-    theta3 = snells(ray_angle=result2["ray_angle"], normal_angle=result2["normal_angle"],
-                    index_left=MATERIAL_REFRACTIVE_INDEX, index_right=VACUUM_REFRACTIVE_INDEX)
-    result3 = propagate2flat(result2["y"], theta3, END-result1["x"]-result2["x"], COMPONENT_DIAMETER, suppress=True)
+    result1 = propagate2flat_old(ray, INITIAL_ANGLE, FIRST_INTERFACE, COMPONENT_DIAMETER)
+    theta2 = snells_old(ray_angle=result1["ray_angle"], normal_angle=result1["normal_angle"],
+                        index_left=VACUUM_REFRACTIVE_INDEX, index_right=MATERIAL_REFRACTIVE_INDEX)
+    result2 = propagate2spherical_old(result1["y"], theta2, SECOND_INTERFACE - result1["x"], COMPONENT_DIAMETER,
+                                      SECOND_LENS_RADIUS)
+    theta3 = snells_old(ray_angle=result2["ray_angle"], normal_angle=result2["normal_angle"],
+                        index_left=MATERIAL_REFRACTIVE_INDEX, index_right=VACUUM_REFRACTIVE_INDEX)
+    result3 = propagate2flat_old(result2["y"], theta3, END - result1["x"] - result2["x"], COMPONENT_DIAMETER, suppress=True)
 
     plt.plot([0, result1["x"], result1["x"] + result2["x"], result1["x"] + result2["x"] + result3["x"]],
              [ray, result1["y"], result2["y"], result3["y"]],
