@@ -4,6 +4,7 @@
 import numpy as np
 from numpy.linalg import norm
 from vectorND import rejection, unit
+from functions import *
 
 
 def snellsvec(k_in, N, n_in=1, n_out=1):
@@ -78,3 +79,38 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
         N = unit(B - Csphere) * np.sign(Rsphere)        # Compute normal vector
 
     return B, N
+
+
+def input_beam(center_position, diameter, angle, rays=20):
+    diameter = diameter*1.01
+    beam_radius = diameter/2
+    step_size = diameter/rays
+    xy = np.mgrid[-beam_radius+center_position[0]:beam_radius+center_position[0]+step_size:step_size,
+                  -beam_radius+center_position[1]:beam_radius+center_position[1]+step_size:step_size]
+    return [
+        (np.array([xy[0][x][y], xy[1][x][y], center_position[2]]),
+         np.array([0, sin(angle), cos(angle)]),
+         sqrt((xy[0][x][y]-center_position[0]) ** 2 + (xy[1][x][y]-center_position[1]) ** 2) / beam_radius)
+        for x in range(0, rays) for y in range(0, rays)
+        if ((xy[0][x][y]-center_position[0]) ** 2 + (xy[1][x][y]-center_position[1]) ** 2) < beam_radius ** 2
+    ]
+
+
+def two_interface_system(rays, r1, r2, n_lens, d_lens, first_interface):
+    f = focal_length(n=n_lens, r1=r1, r2=r2, d=d_lens)
+    h2 = principal_plane_h2(f=f, n=n_lens, d=d_lens, r1=r1)
+    ray_paths = []
+    for ray in rays:
+        interface1 = propagate2surf3D(A=ray[0], k=ray[1], zdist=first_interface, Rsphere=r1, Rring=None)
+        k2 = snellsvec(k_in=ray[1], N=interface1[1], n_in=1, n_out=n_lens)
+        interface2 = propagate2surf3D(A=interface1[0], k=k2, zdist=d_lens, Rsphere=r2, Rring=None)
+        k3 = snellsvec(k_in=k2, N=interface2[1], n_in=n_lens, n_out=1)
+        interface3 = propagate2surf3D(A=interface2[0], k=k3, zdist=h2 + f, Rsphere=0, Rring=None)
+        r = [
+            [ray[0][0], interface1[0][0], interface2[0][0], interface3[0][0]],
+            [ray[0][1], interface1[0][1], interface2[0][1], interface3[0][1]],
+            [ray[0][2], interface1[0][2], interface2[0][2], interface3[0][2]],
+            ray[2]
+        ]
+        ray_paths.append(r)
+    return ray_paths

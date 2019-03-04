@@ -28,19 +28,6 @@ def minimum_coma_condition(n, object_distance, img_distance):
     return sigma
 
 
-def input_beam(center_position, diameter, angle, rays=20):
-    diameter = diameter*1.01
-    beam_radius = diameter/2
-    step_size = diameter/rays
-    xy = np.mgrid[-beam_radius+center_position[0]:beam_radius+center_position[0]+step_size:step_size,
-                  -beam_radius+center_position[1]:beam_radius+center_position[1]+step_size:step_size]
-    return [
-        (np.array([xy[0][x][y], xy[1][x][y], center_position[2]]),
-         np.array([0, sin(angle), cos(angle)])) for x in range(0, rays) for y in range(0, rays)
-        if ((xy[0][x][y]-center_position[0]) ** 2 + (xy[1][x][y]-center_position[1]) ** 2) < beam_radius ** 2
-    ]
-
-
 # Graphical functions only
 def lens_curvature(component_diameter, lens_center, interface_radius, array_length=30):
     y_axis = np.linspace(-component_diameter / 2, component_diameter / 2, array_length)
