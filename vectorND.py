@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-from numpy.linalg import norm as norm
+from numpy.linalg import norm
 
 
 def unit(v):
