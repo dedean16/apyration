@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+"""Ray propagation and refraction functions in 3D."""
+
 import numpy as np
 from numpy.linalg import norm
-from vectorND import rejection
+from vectorND import rejection, unit
 
 
 def snellsvec(k_in, N, n_in=1, n_out=1):
@@ -30,7 +32,8 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
 
     Input:
     A       Starting position of ray. (x,y,z).
-    k       Directional unit vector of ray. (kx, ky, kz).
+    k       Directional unit vector of ray. (kx, ky, kz). Must have nonzero
+            z-component.
     zdist   Distance to surface along z axis. (scalar).
     Rsphere Radius of spherical surface. If Rsphere=0, a flat surface will be
             used. (scalar).
@@ -44,7 +47,6 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
     if Rsphere == 0:                # Flat surface
         B = A + k * zdist/k[2]      # Scale k to flat surface
         N = np.array((0, 0, -1))    # Surface normal of flat surface
-        return B, N
 
     else:                           # Spherical surface
         # See: https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
@@ -58,8 +60,21 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
                                + Rsphere**2)            # Discriminant of ABCeq
         kdist1 = -kinACsphere + discriminant
         kdist2 = -kinACsphere - discriminant
+        ksort = np.sort((kdist1, kdist2))
 
+        if discriminant <= 0:                           # No solutions
+            print('Warning: ray out of bounds!')
+            return
 
+        # Solutions must be forward
+        if ksort[0] > 0:
+            kdist = ksort[0]
+        elif ksort[1] > 0:
+            kdist = ksort[1]
+        else:
+            print('Warning: no intersection found in forward ray direction!')
 
+        B = A + k * kdist                               # Solution for intersec
+        N = unit(B - Csphere)                           # Compute normal vector
 
-
+    return B, N
