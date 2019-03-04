@@ -6,7 +6,7 @@ import numpy
 
 
 def snells(ray_angle=0.0, normal_angle=0.0, index_left=1, index_right=1):
-    """"
+    """
     Returns the angle w.r.t. the optical axis after encountering an interface, given the angle of the ray to the normal
     of the surface, the angle of the surface normal to the optical axis, and the left and right indices of refraction
     """
@@ -14,7 +14,7 @@ def snells(ray_angle=0.0, normal_angle=0.0, index_left=1, index_right=1):
 
 
 def propagate2flat(initial_y, initial_angle, distance_to_interface, component_diameter, suppress=False):
-    """"
+    """
     Returns the x,y coordinates, angle to surface normal and the angle of the normal to the optical axis, given the
     initial y coordinate, angle of the ray w.r.t. the normal, distance from the interface, and component diameter.
     """
