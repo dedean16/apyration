@@ -83,7 +83,8 @@ def propagate2surf3D(A, k, z, Rsphere, Rring):
     return B, N
 
 
-def input_beam(center_position, diameter, angle, rays=20):
+def input_beam(z, diameter, angle, rays=20):
+    center_position = np.array([0, -z*tan(angle), 0])
     diameter = diameter*1.01
     beam_radius = diameter/2
     step_size = diameter/rays
@@ -103,11 +104,11 @@ def two_interface_system(rays, r1, r2, n_lens, d_lens, first_interface):
     h2 = principal_plane_h2(f=f, n=n_lens, d=d_lens, r1=r1)
     ray_paths = []
     for ray in rays:
-        interface1 = propagate2surf3D(A=ray[0], k=ray[1], zdist=first_interface, Rsphere=r1, Rring=None)
+        interface1 = propagate2surf3D(A=ray[0], k=ray[1], z=first_interface, Rsphere=r1, Rring=None)
         k2 = snellsvec(k_in=ray[1], N=interface1[1], n_in=1, n_out=n_lens)
-        interface2 = propagate2surf3D(A=interface1[0], k=k2, zdist=d_lens, Rsphere=r2, Rring=None)
+        interface2 = propagate2surf3D(A=interface1[0], k=k2, z=first_interface+d_lens, Rsphere=r2, Rring=None)
         k3 = snellsvec(k_in=k2, N=interface2[1], n_in=n_lens, n_out=1)
-        interface3 = propagate2surf3D(A=interface2[0], k=k3, zdist=h2 + f, Rsphere=0, Rring=None)
+        interface3 = propagate2surf3D(A=interface2[0], k=k3, z=first_interface+d_lens+h2 + f, Rsphere=0, Rring=None)
         r = [
             [ray[0][0], interface1[0][0], interface2[0][0], interface3[0][0]],
             [ray[0][1], interface1[0][1], interface2[0][1], interface3[0][1]],
