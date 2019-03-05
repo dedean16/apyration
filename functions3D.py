@@ -7,6 +7,7 @@ from vectorND import rejection, unit
 from functions import *
 
 
+
 def snellsvec(k_in, N, n_in=1, n_out=1):
     """
     Compute direction vector of refracted ray.
