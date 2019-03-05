@@ -27,7 +27,7 @@ def snellsvec(k_in, N, n_in=1, n_out=1):
     return k_out
 
 
-def propagate2surf3D(A, k, zdist, Rsphere, Rring):
+def propagate2surf3D(A, k, z, Rsphere, Rring):
     """
     Propagate light ray along z-axis to surface perpendicular to z.
 
@@ -35,7 +35,7 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
     A       Starting position of ray. (x,y,z).
     k       Directional unit vector of ray. (kx, ky, kz). Must have nonzero
             z-component.
-    zdist   Distance to surface along z axis. (scalar).
+    z       Position of surface on z axis. (scalar).
     Rsphere Radius of spherical surface. If Rsphere=0, a flat surface will be
             used. (scalar).
     Rring   Radius indicating the size of the lens. Rays outside this radius
@@ -45,6 +45,8 @@ def propagate2surf3D(A, k, zdist, Rsphere, Rring):
     B       Arrival position of ray at surface. (x,y,z)
     N       Surface normal unit vector. (Nx, Ny, Nz).
     """
+    zdist = z - A[2]                # Compute relative distance to front
+
     if Rsphere == 0:                # Flat surface
         B = A + k * zdist/k[2]      # Scale k to flat surface
         N = np.array((0, 0, -1))    # Surface normal of flat surface
