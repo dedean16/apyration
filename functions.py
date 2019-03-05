@@ -6,6 +6,7 @@ import numpy as np
 
 
 def focal_length(n, r1, r2, d):
+    """Compute focal length with lensmaker's formula; Pedrotti eq20-26."""
     return ((n - 1) * (1 / r1 - 1 / r2 + ((n - 1) * d) / (n * r1 * r2))) ** -1
 
 
