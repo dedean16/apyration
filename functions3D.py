@@ -118,3 +118,16 @@ def two_interface_system(rays, r1, r2, n_lens, d_lens, first_interface):
         ]
         ray_paths.append(r)
     return ray_paths
+
+
+def find_ray_crossing(A1, k1, A2, k2):
+    """Find position where two rays are closest together."""
+    # Find parameter s with closest distance in xy-plane.
+    # From Wolfram Mathematica, I derived this:  d/ds sqrt(Dx^2 + Dy^2) == 0 -> s=...
+    s = (-(A1[0]*k1[0]) + A2[0]*k1[0] - A1[0]*k2[0] + A2[0]*k2[0] - A1[1]*k1[1]
+         + A2[1]*k1[1] - A1[1]*k2[1] + A2[1]*k2[1]) / (k1[0]**2 + 2*k1[0]*k2[0]
+                                                       + k2[0]**2 + k1[1]**2 +
+                                                       2*k1[1]*k2[1] + k2[1]**2
+                                                      + 1e-20)
+    B = (A1 + k1*s + A2 + k2*s) / 2             # Compute midpoint of ray crossing
+    return B
