@@ -9,6 +9,17 @@ from mpl_toolkits.mplot3d import Axes3D
 from geometry3D import lens_surface, lens_thickness
 from functions3D import *
 from matplotlib.pyplot import cm
+from matplotlib.mlab import griddata
+
+
+def grid(x, y, z, resX=100, resY=100):
+    "Convert 3 column data to matplotlib grid"
+    xi = np.linspace(min(x), max(x), resX)
+    yi = np.linspace(min(y), max(y), resY)
+    Z = griddata(x, y, z, xi, yi, interp='linear')
+    X, Y = np.meshgrid(xi, yi)
+    return X, Y, Z
+
 
 PLOT_RAY_TRACE = False
 
@@ -22,7 +33,7 @@ ray_paths = two_interface_system(rays=rays, first_interface=FIRST_INTERFACE,
 END = 30
 
 if True:
-    plt.figure(1)
+    # plt.figure(1)
     ray_container = {"x": [], "y": [], "z": [], "c": []}
     for r in ray_paths:
         ray_container["x"].append(r[0][-1])
@@ -31,8 +42,21 @@ if True:
         ray_container["c"].append(r[3])
         # noinspection PyUnresolvedReferences
         # plt.plot(r[0][-1], r[1][-1], 'o', color=cm.tab10(r[3]), markersize=4)
-    plt.scatter(x=ray_container["x"], y=ray_container["y"], c=ray_container["c"], cmap='tab10')
+    # plt.scatter(x=ray_container["x"], y=ray_container["y"], c=ray_container["c"], cmap='tab10')
+    
+
+    # Create a contour plot
+    plt.figure(3)
+    X, Y, C = grid(ray_container["x"], ray_container["y"], ray_container["c"])
+    plt.axes(aspect='equal')
+    plt.contourf(X, Y, C)
+    plt.colorbar()
+    plt.title('Comatic circles')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+
 print('pause')
+
 if PLOT_RAY_TRACE:
     plt.figure(2)
     ax = plt.axes(projection='3d')
