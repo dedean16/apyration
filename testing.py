@@ -83,6 +83,13 @@ if PLOT_RAY_TRACE:
     ax.plot_surface(L2['x'], L2['z'], L2['y'], color='xkcd:sky blue', alpha=0.5)
     ax.plot3D([0, 0, 0], [0, END, 0], PLOT_CONSTRUCTION)
 
+
+rbeam, xzone, yzone, rzone = compute_coma(ray_container, Nzones=30)
+plt.figure(4)
+plt.plot(rbeam**3, yzone-yzone[0], '.-')
+# plt.plot(rbeam**3, rzone, '.-')
+
+
 plt.show()
 
 print("pause")

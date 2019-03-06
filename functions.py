@@ -89,3 +89,31 @@ def propagate2spherical_old(initial_y, initial_angle, distance_to_interface, com
         "ray_angle": ray_angle,
         "normal_angle": normal_angle
     }
+
+
+def compute_coma(ray_container, Nzones=16):
+    """Compute the amount of coma."""
+    rcc = np.array(ray_container['c'])
+    rcx = np.array(ray_container['x'])
+    rcy = np.array(ray_container['y'])
+    Rzones = np.linspace(0, max(ray_container['c']), Nzones)
+
+    xzone = []
+    yzone = []
+    rzone = []
+
+    for iRz in range(len(Rzones) - 1):
+        # Construct arrays containing zone coordinates
+        rcxzone = rcx[np.logical_and((rcc >= Rzones[iRz]), (rcc < Rzones[iRz+1]))]
+        rcyzone = rcy[np.logical_and((rcc >= Rzones[iRz]), (rcc < Rzones[iRz+1]))]
+
+        # Compute zone center coordinates and zone radius
+        xzone.append(np.mean(rcxzone))
+        yzone.append(np.mean(rcyzone))
+        rzone.append(np.mean(np.sqrt((rcxzone - xzone[-1])**2 + (rcyzone -
+                                                                 yzone[-1])**2)))
+ 
+    rbeam = (Rzones[1:] + Rzones[:-1]) / 2
+
+    return rbeam, xzone, yzone, rzone
+
