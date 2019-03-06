@@ -1,24 +1,35 @@
 #!/usr/bin/env python3
-from math import tan, sin, asin, cos, sqrt
+from math import tan, sin, asin, sqrt, inf
 import warnings
 from numpy.polynomial import Polynomial
 import numpy as np
+from matplotlib.mlab import griddata
 
 
 def focal_length(n, r1, r2, d):
     """Compute focal length with lensmaker's formula; Pedrotti eq20-26."""
+    r1 = inf if r1 == 0 else r1
+    r2 = inf if r2 == 0 else r2
     return ((n - 1) * (1 / r1 - 1 / r2 + ((n - 1) * d) / (n * r1 * r2))) ** -1
 
 
 def principal_plane_h1(f, n, d, r2):
+    r2 = inf if r2 == 0 else r2
     return -f * (n - 1) * d / (r2 * n)
 
 
 def principal_plane_h2(f, n, d, r1):
+    r1 = inf if r1 == 0 else r1
     return -f * (n - 1) * d / (r1 * n)
 
 
 def coddington_shape_factor(r1, r2):
+    if r1 == 0:
+        return -1
+    if r2 == 0:
+        return 1
+    if r1 == -r2:
+        return 0
     return (r2 + r1) / (r2 - r1)
 
 
@@ -27,6 +38,15 @@ def minimum_coma_condition(n, object_distance, img_distance):
     if object_distance is not None:
         sigma = sigma * ((object_distance - img_distance) / (object_distance + img_distance))
     return sigma
+
+
+def grid(x, y, z, resX=100, resY=100):
+    "Convert 3 column data to matplotlib grid"
+    xi = np.linspace(min(x), max(x), resX)
+    yi = np.linspace(min(y), max(y), resY)
+    Z = griddata(x, y, z, xi, yi, interp='linear')
+    X, Y = np.meshgrid(xi, yi)
+    return X, Y, Z
 
 
 # Graphical functions only

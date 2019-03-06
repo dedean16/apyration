@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import numpy as np
-from functions import *
 from config_plot import *
 from config_general import *
-from math import pi
+from math import pi, inf
+from functions import *
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from geometry3D import lens_surface, lens_thickness
@@ -21,29 +21,35 @@ def grid(x, y, z, resX=100, resY=100):
     return X, Y, Z
 
 
+
+PLOT_SCATTER_IMAGE = True
 PLOT_RAY_TRACE = False
 
-rays = input_beam(z=FIRST_INTERFACE, diameter=5, angle=pi/6, rays=101)
+
+rays = input_beam(z=FIRST_INTERFACE, diameter=8, angle=pi/12, rays=100)
 
 FIRST_LENS_RADIUS = 10
 SECOND_LENS_RADIUS = -10
+
 ray_paths = two_interface_system(rays=rays, first_interface=FIRST_INTERFACE,
                                  r1=FIRST_LENS_RADIUS, r2=SECOND_LENS_RADIUS,
-                                 n_lens=MATERIAL_REFRACTIVE_INDEX, d_lens=THICKNESS_LENS)
+                                 n_lens=MATERIAL_REFRACTIVE_INDEX, d_lens=THICKNESS_LENS,
+                                 offset=0)
 END = 30
 
-if True:
-    # plt.figure(1)
+
+if PLOT_SCATTER_IMAGE:
+    plt.figure(0)
     ray_container = {"x": [], "y": [], "z": [], "c": []}
     for r in ray_paths:
         ray_container["x"].append(r[0][-1])
         ray_container["y"].append(r[1][-1])
-        ray_container["z"].append(r[2][-1])
+        # ray_container["z"].append(r[2][-1])
         ray_container["c"].append(r[3])
         # noinspection PyUnresolvedReferences
         # plt.plot(r[0][-1], r[1][-1], 'o', color=cm.tab10(r[3]), markersize=4)
     # plt.scatter(x=ray_container["x"], y=ray_container["y"], c=ray_container["c"], cmap='tab10')
-    
+
 
     # Create a contour plot
     plt.figure(3)
@@ -63,9 +69,9 @@ if PLOT_RAY_TRACE:
     ax.set_xlabel('x')
     ax.set_ylabel('z')
     ax.set_zlabel('y')
-    ax.set_xlim(-END/2, END/2)
-    ax.set_ylim(0, END)
-    ax.set_zlim(-END/2, END/2)
+    # ax.set_xlim(-END/2, END/2)
+    # ax.set_ylim(20, 25)
+    # ax.set_zlim(-END/2, END/2)
     ray_container2 = {"x": [], "y": [], "z": [], "c": []}
     for r in ray_paths:
         ray_container2["x"].append(r[0])

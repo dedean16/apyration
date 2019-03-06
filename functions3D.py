@@ -5,6 +5,7 @@ import numpy as np
 from numpy.linalg import norm
 from vectorND import rejection, unit
 from functions import *
+from math import cos
 
 
 
@@ -84,8 +85,8 @@ def propagate2surf3D(A, k, z, Rsphere, Rring):
     return B, N
 
 
-def input_beam(z, diameter, angle, rays=20):
-    center_position = np.array([0, -z*tan(angle), 0])
+def input_beam(z, diameter, angle, rays=20, offset=0):
+    center_position = np.array([0, -z*tan(angle)+offset, 0])
     diameter = diameter*1.01
     beam_radius = diameter/2
     step_size = diameter/rays
@@ -100,7 +101,7 @@ def input_beam(z, diameter, angle, rays=20):
     ]
 
 
-def two_interface_system(rays, r1, r2, n_lens, d_lens, first_interface):
+def two_interface_system(rays, r1, r2, n_lens, d_lens, first_interface, offset=0):
     f = focal_length(n=n_lens, r1=r1, r2=r2, d=d_lens)
     h2 = principal_plane_h2(f=f, n=n_lens, d=d_lens, r1=r1)
     ray_paths = []
@@ -109,7 +110,8 @@ def two_interface_system(rays, r1, r2, n_lens, d_lens, first_interface):
         k2 = snellsvec(k_in=ray[1], N=interface1[1], n_in=1, n_out=n_lens)
         interface2 = propagate2surf3D(A=interface1[0], k=k2, z=first_interface+d_lens, Rsphere=r2, Rring=None)
         k3 = snellsvec(k_in=k2, N=interface2[1], n_in=n_lens, n_out=1)
-        interface3 = propagate2surf3D(A=interface2[0], k=k3, z=first_interface+d_lens+h2 + f, Rsphere=0, Rring=None)
+        interface3 = propagate2surf3D(A=interface2[0], k=k3, z=first_interface+d_lens+h2 + f + offset,
+                                      Rsphere=0, Rring=None)
         r = [
             [ray[0][0], interface1[0][0], interface2[0][0], interface3[0][0]],
             [ray[0][1], interface1[0][1], interface2[0][1], interface3[0][1]],
