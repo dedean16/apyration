@@ -11,7 +11,7 @@ from matplotlib.pyplot import cm
 # Variable arrays
 codd_opt = 0.8
 Nvars = 20
-theta = np.pi/12
+angle_optax = np.pi/12
 Rlens1 = [np.linspace(5, 30, Nvars), np.linspace(10, 60, Nvars), np.zeros(Nvars),
           np.linspace(5, 33, Nvars)]
 Rlens2 = [np.zeros(Nvars), -np.linspace(10, 60, Nvars), -np.linspace(5, 30, Nvars)]
@@ -34,7 +34,7 @@ for i in range(len(Rlens1)):
     comayr3s.append([])
 
     for iR in range(Nvars):
-        rays = input_beam(z=FIRST_INTERFACE, diameter=4, angle=theta, rays=60)
+        rays = input_beam(z=FIRST_INTERFACE, diameter=4, angle=angle_optax, rays=60)
 
         # Compute ray paths
         ray_paths = two_interface_system(rays=rays, first_interface=FIRST_INTERFACE,
@@ -65,9 +65,9 @@ for i in range(len(Rlens1)):
         print('Radii:', Rlens1[i][iR], Rlens2[i][iR], 'Coddington:', coddington[i][-1])
 
     # Let's get plotting!
-    plt.plot(fs[i], comayr3s[i], '.-', label=f"CSF={coddington[i][0]}")
+    plt.plot(fs[i], comayr3s[i], '.-', label=f"$\sigma$={coddington[i][0]}")
 
-plt.title(rf'Coma Strength | $\theta={theta:.2f}$ | n={MATERIAL_REFRACTIVE_INDEX}')
+plt.title(rf'Coma Strength | $\phi={angle_optax:.2f}$ | n={MATERIAL_REFRACTIVE_INDEX}')
 plt.xlabel('focal length')
 plt.ylabel('coma strength')
 plt.legend()
